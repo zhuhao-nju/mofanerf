@@ -169,3 +169,17 @@ To train the `RefineNet`, run the command below.
 python train.py --name facescape --dataroot dataset --nerf_folder train_A --gt_folder train_B
 ```
 
+
+
+Bibtex
+---
+If you find this project helpful to your research, please consider citing:
+
+```
+@article{zhuang2021mofanerf,
+  title={MoFaNeRF: Morphable Facial Neural Radiance Field},
+  author={Zhuang, Yiyu and Zhu, Hao and Sun, Xusen and Cao, Xun},
+  journal={arXiv preprint arXiv:2112.02308},
+  year={2021}
+}
+```
