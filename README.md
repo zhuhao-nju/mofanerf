@@ -6,11 +6,8 @@
 <img src="https://neverstopzyy.github.io/mofanerf/images/fig_title.png" width=1024>
 
 **Any questions or discussions are welcomed!**
-
 ----
-
-## Catalog
-
+Catalog
 -----
 * [Install](#install)
 * [Test our model](#test-our-model)
@@ -23,9 +20,9 @@
   + [1. data preprocessing](#1-data-preprocessing)
   + [2. training](#2-training)
 
-## Install
-
+Install
 ------
+* **Environment configuration**
 ```
 pip install -r requirements.txt
 ```
@@ -39,10 +36,14 @@ pip install -r requirements.txt
   - imageio
   - imageio-ffmpeg
 </details>
-  
-------
-##  Test our model
 
+* **Pre-trained models**
+
+You can download our models from this [link](https://box.nju.edu.cn/f/10c4b145bfc648efb145/?dl=1).  
+After uncompressing, you should move the folder `/facescape/` into `./refinementModule/checkpoints`, 
+and the folder `/mofanerf_0to300/` into `./logs`.
+
+Test our model
 ------
 - ### Fitting
 <img src="https://neverstopzyy.github.io/mofanerf/images/fig_gen_fit.png" width=1024>
@@ -76,8 +77,7 @@ python test.py --name facescape --nerf_folder ../data/fit/fitting/segRelRes_0013
 ```
 
 
-## Train your own model
-
+Train your own model
 ------
 
 ### 1. Data preparation
