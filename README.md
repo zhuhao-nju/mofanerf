@@ -3,10 +3,11 @@
 
 [comment]: <> (| [Data]&#40;https://zjueducn-my.sharepoint.com/:f:/g/personal/pengsida_zju_edu_cn/Eo9zn4x_xcZKmYHZNjzel7gBdWf_d4m-pISHhPWB-GZBYw?e=Hf4mz7&#41;)
 
-<img src="https://neverstopzyy.github.io/mofanerf/images/fig_title.png" width=1024>
+<img src="https://i.imgur.com/PNRhZAN.png" width=1024>
 
 **Any questions or discussions are welcomed!**
-----
+
+
 Catalog
 -----
 * [Install](#install)
@@ -26,6 +27,7 @@ Install
 ```
 pip install -r requirements.txt
 ```
+<box style="text-indent:1.0em; font-size: 13px">
 <details>
   <summary> Dependencies (click to expand) </summary>
   
@@ -36,6 +38,8 @@ pip install -r requirements.txt
   - imageio
   - imageio-ffmpeg
 </details>
+</box>
+<br>
 
 * **Pre-trained models**
 
