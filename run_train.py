@@ -1,18 +1,20 @@
 import json
-from tqdm import tqdm, trange
-from models.render_class import *
-from load_facescape import pose_spherical
+
 import cv2
+from tqdm import tqdm, trange
 
-from run_nerf_helpers import *
-
-from config_parser import config_parser
-from create_model_condition import create_nerf
+from models.render_class import *
+from tools.config_parser import config_parser
+from tools.create_model_condition import create_nerf
+from tools.load_facescape import pose_spherical
+from tools.run_nerf_helpers import *
 
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 np.random.seed(0)
 DEBUG = False
+
+
 def load_uvmap(basedir="../data/textureMap300/", personList=None):
     fileList = {}
     for id in personList:
@@ -23,13 +25,13 @@ def load_uvmap(basedir="../data/textureMap300/", personList=None):
 def load_facescape_data(basedir, half_res=False, testskip=1, personList=None):
     rawShapeCodes = load_bmData()
 
-    basedir = basedir#"." + basedir
+    basedir = basedir  # "." + basedir
     splits = ['train', 'val', 'test']
     metas = {}
     all_imgs = []  # all images
     all_poses = []  # all poses
     all_idCode = []  # all id number
-    all_shapeCodes = []  #shape code
+    all_shapeCodes = []  # shape code
     all_expTypes = []
     counts = [0]  # calculate image number
     for s in splits:
@@ -101,7 +103,7 @@ def readImgFromPath(imgPath, half_res=True, white_bkgd=False, is_uvMap=False):
         H_new = 512
         W_new = 512
         if H_new != H:
-            imgs= cv2.resize(imgs, (W_new, H_new), interpolation=cv2.INTER_AREA)
+            imgs = cv2.resize(imgs, (W_new, H_new), interpolation=cv2.INTER_AREA)
     if white_bkgd:
         imgs = imgs[..., :3] * imgs[..., -1:] + (1. - imgs[..., -1:])
     else:
@@ -113,35 +115,37 @@ def load_bmData():
     bmModel = np.load('../data/factors_id.npy')
     return bmModel
 
+
 class LMModule:
     def __init__(self, H=None):
         self.landmark = np.load("../data/1_975_landmarks.npy")
         self.H = H
+
     def sample_point(self, numOfPoint=None, K=None, pose=None, id=None, exp=None, coords=None):
-        if exp==None:
-            exp=0
+        if exp == None:
+            exp = 0
         pose = pose.cpu().numpy()
         id = int(id.item())
         lm3d = self.landmark[id, exp, :, :] / 50.
-        Rt=np.eye(4)
-        M=np.array([[0,-1,0],[1,0,0],[0,0,1]])
-        Rt[:3,:3] = pose[:3,:3].T
-        Rt[:3,3] = -pose[:3,:3].T.dot(pose[:3,3])  #.T
+        Rt = np.eye(4)
+        M = np.array([[0, -1, 0], [1, 0, 0], [0, 0, 1]])
+        Rt[:3, :3] = pose[:3, :3].T
+        Rt[:3, 3] = -pose[:3, :3].T.dot(pose[:3, 3])  # .T
         # project 3d to 2d
-        lm2d = K@Rt[:3,:]@(np.concatenate([lm3d,np.ones([lm3d.shape[0],1])] , 1 ).T)
-        lm2d_half = lm2d//lm2d[2,:]
+        lm2d = K @ Rt[:3, :] @ (np.concatenate([lm3d, np.ones([lm3d.shape[0], 1])], 1).T)
+        lm2d_half = lm2d // lm2d[2, :]
         # rot the image
-        lm2d = np.round(lm2d_half).astype(np.long)[:2,:].T@M[:2,:2] #.T[:,:2]  #[68,2]
+        lm2d = np.round(lm2d_half).astype(np.long)[:2, :].T @ M[:2, :2]  # .T[:,:2]  #[68,2]
 
-        p = np.long(numOfPoint/5*3//68)
+        p = np.long(numOfPoint / 5 * 3 // 68)
         wid = self.H * 0.025
-        rand = np.random.randn(p,2) * wid
-        sampleLandMark = lm2d[:,None,:].repeat(p, 1) + rand[None,:,:].repeat(68, 0)
-        sampleLandMark = sampleLandMark.reshape(-1,2).astype(np.int)
-        sampleUniform = np.random.choice(coords.shape[0], size=[numOfPoint-sampleLandMark.shape[0]], replace=False)
+        rand = np.random.randn(p, 2) * wid
+        sampleLandMark = lm2d[:, None, :].repeat(p, 1) + rand[None, :, :].repeat(68, 0)
+        sampleLandMark = sampleLandMark.reshape(-1, 2).astype(np.int)
+        sampleUniform = np.random.choice(coords.shape[0], size=[numOfPoint - sampleLandMark.shape[0]], replace=False)
         sampleUniform = coords[sampleUniform]
 
-        return torch.cat([sampleUniform,torch.Tensor(sampleLandMark).cuda()], 0).long()
+        return torch.cat([sampleUniform, torch.Tensor(sampleLandMark).cuda()], 0).long()
 
 
 def getValidPerson(datadir):
@@ -149,9 +153,10 @@ def getValidPerson(datadir):
     tt = sorted(t)
     tt.sort(key=len)  # sort by length
     t1 = tt[:359]
-    invalidPerList = ['39', '52', '69', '295', '307', '413', '417', '587', '237', '353', '356', '440', '363'] #need reupload
+    invalidPerList = ['39', '52', '69', '295', '307', '413', '417', '587', '237', '353', '356', '440',
+                      '363']  # need reupload
     changeId = ['615', '616', '619', '620', '622', '623', '624', '626', '627', '722', '725', '728', '733', '734']
-    for i,invalidPer in enumerate(invalidPerList):
+    for i, invalidPer in enumerate(invalidPerList):
         id = t1.index(invalidPer)
         t1[id] = changeId[i]
     return t1
@@ -175,8 +180,10 @@ def train():
     # Load data
     K = None
     if args.dataset_type == 'blender':
-        images, poses, idcodes, shapeCodes, expTypes, render_poses, hwf, i_split = load_facescape_data(args.datadir, args.half_res,
-                                                                                 args.testskip, args.personList)
+        images, poses, idcodes, shapeCodes, expTypes, render_poses, hwf, i_split = load_facescape_data(args.datadir,
+                                                                                                       args.half_res,
+                                                                                                       args.testskip,
+                                                                                                       args.personList)
         uv_images = load_uvmap(personList=args.personList)  # ODO: uv_images
         print('Loaded facescape', shapeCodes.shape, render_poses.shape, hwf, args.datadir)
         i_train, i_val, i_test = i_split
@@ -285,8 +292,9 @@ def train():
         else:
             # Random from one image
             img_i = np.random.choice(i_train)  ##
-            target_uvmap = readImgFromPath(uv_images["{}".format(idcodes[img_i])], half_res=False, is_uvMap=True).to(device)
-            target_expType = expTypes[img_i] #TODO： new exp11
+            target_uvmap = readImgFromPath(uv_images["{}".format(idcodes[img_i])], half_res=False, is_uvMap=True).to(
+                device)
+            target_expType = expTypes[img_i]  # TODO： new exp11
             target = images[img_i]
             target = readImgFromPath(target, half_res=args.half_res)
             target = torch.Tensor(target).to(device)
@@ -313,7 +321,8 @@ def train():
                                          -1)  # (H, W, images)
 
                 coords = torch.reshape(coords, [-1, 2])  # (H * W, images) #400*400 number of index of an image
-                select_coords = LM.sample_point(numOfPoint=N_rand, K=K, pose=pose, id=idcode_target, exp=target_expType, coords=coords)
+                select_coords = LM.sample_point(numOfPoint=N_rand, K=K, pose=pose, id=idcode_target, exp=target_expType,
+                                                coords=coords)
                 rays_o = rays_o[select_coords[:, 0], select_coords[:, 1]]  # (N_rand, 3)
                 rays_d = rays_d[select_coords[:, 0], select_coords[:, 1]]  # (N_rand, 3)
                 batch_rays = torch.stack([rays_o, rays_d], 0)
@@ -321,7 +330,8 @@ def train():
                 batch_shapeCodes = shapeCodes_target[None, :].expand(N_rand, -1)
 
         #####  Core optimization loop  #####
-        rgb, disp, acc, extras = render.render(H, W, K, chunk=args.chunk, rays=batch_rays, shapeCodes=batch_shapeCodes, uvMap=target_uvmap,
+        rgb, disp, acc, extras = render.render(H, W, K, chunk=args.chunk, rays=batch_rays, shapeCodes=batch_shapeCodes,
+                                               uvMap=target_uvmap,
                                                expType=target_expType,
                                                verbose=i < 10, retraw=True,
                                                **render_kwargs_train)
@@ -348,12 +358,11 @@ def train():
         # NOTE: IMPORTANT!
         ###   update learning rate   ###
         decay_rate = 0.1
-        decay_steps = args.lrate_decay * 1500  #250*1000
+        decay_steps = args.lrate_decay * 1500  # 250*1000
         new_lrate = args.lrate * (decay_rate ** (global_step / decay_steps))
         for param_group in optimizer.param_groups:
             param_group['lr'] = new_lrate
         ################################
-
 
         ####   About saving and logging ###########
         # Rest is logging
@@ -376,10 +385,12 @@ def train():
             now_test = np.random.choice(i_test, 1)
             print('test poses shape', poses[now_test].shape)
             with torch.no_grad():
-                render.render_path(torch.Tensor(poses[now_test]).to(device), [i//2 for i in hwf], K//2, args.chunk//4, render_kwargs_test,
+                render.render_path(torch.Tensor(poses[now_test]).to(device), [i // 2 for i in hwf], K // 2,
+                                   args.chunk // 4, render_kwargs_test,
                                    shapeCodes=torch.Tensor(shapeCodes[now_test]).to(device),
                                    uvMap=torch.stack(
-                                       [readImgFromPath(uv_images["{}".format(idcodes[i])], half_res=False, is_uvMap=True) for i in
+                                       [readImgFromPath(uv_images["{}".format(idcodes[i])], half_res=False,
+                                                        is_uvMap=True) for i in
                                         now_test]),
                                    expType=expTypes[now_test],
                                    gt_imgs=np.array([readImgFromPath(images[i]) for i in now_test]),
@@ -387,7 +398,8 @@ def train():
             print('Saved test set')
 
         if i % args.i_print == 0:
-            tqdm.write(f"[TRAIN] Iter: {i} Loss: {loss.item()}  PSNR: {psnr.item()} lr: {optimizer.param_groups[0]['lr']}")
+            tqdm.write(
+                f"[TRAIN] Iter: {i} Loss: {loss.item()}  PSNR: {psnr.item()} lr: {optimizer.param_groups[0]['lr']}")
             logger.write(f"{i} Loss: {loss.item()}  PSNR: {psnr.item()}\n")
         global_step += 1
 

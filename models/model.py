@@ -3,7 +3,6 @@ import torch
 
 torch.autograd.set_detect_anomaly(True)
 import torch.nn as nn
-import torch.nn.functional as F
 import numpy as np
 
 # Misc
@@ -99,10 +98,10 @@ class NeRF(nn.Module):
 
         self.linear_BiM_xyz = skipMLP(D=D, W=W, input_ch=self.input_ch_shapeCodes + W, skip=skips[0])
         self.linear_uv_xyzBiM = skipMLP(D=D, W=W, input_ch=self.input_ch_textureCodes + W,
-                                         skip=skips[0])
+                                        skip=skips[0])
         self.linear_view_xyBMuv = nn.Sequential(
-                            nn.Linear(self.input_ch_views + W, W//2),
-                            nn.ReLU())
+            nn.Linear(self.input_ch_views + W, W // 2),
+            nn.ReLU())
 
         if use_viewdirs:
             # self.feature_linear = nn.Linear(W, W)
@@ -136,10 +135,12 @@ class NeRF(nn.Module):
         outputs = torch.cat([rgb, alpha], -1)
 
         return outputs
+
     def initialize(self):
         for m in self.modules():
             if isinstance(m, nn.Linear):
                 nn.init.xavier_uniform_(m.weight.data, gain=nn.init.calculate_gain('relu'))
+
     def load_weights_from_keras(self, weights):
         assert self.use_viewdirs, "Not implemented if use_viewdirs=False"
 
@@ -169,13 +170,14 @@ class NeRF(nn.Module):
         self.alpha_linear.weight.data = torch.from_numpy(np.transpose(weights[idx_alpha_linear]))
         self.alpha_linear.bias.data = torch.from_numpy(np.transpose(weights[idx_alpha_linear + 1]))
 
+
 class StyleModule(nn.Module):
     def __init__(self, D=4, W=256, input_ch_bm=50, out_ch=30):
         super(StyleModule, self).__init__()
         self.linears1 = nn.Sequential()
 
         for i in range(D):
-            if i==0:
+            if i == 0:
                 self.linears1.add_module("Linear{}".format(0), nn.Linear(input_ch_bm, W))
                 self.linears1.add_module("relu{}".format(0), nn.ReLU())
             else:
@@ -184,15 +186,18 @@ class StyleModule(nn.Module):
         self.linears_scale = nn.Linear(W, out_ch)
         self.linears_bias = nn.Linear(W, out_ch)
         self.initialize()
+
     def initialize(self):
         for m in self.modules():
             if isinstance(m, nn.Linear):
                 nn.init.xavier_uniform_(m.weight.data, gain=nn.init.calculate_gain('relu'))
+
     def forward(self, bmcodes):
         feature = self.linears1(bmcodes)
         scale = self.linears_scale(feature)
         bias = self.linears_bias(feature)
         return scale, bias
+
 
 class skipMLP(nn.Module):
     def __init__(self, D=8, W=256, input_ch=256, skip=None):
@@ -217,6 +222,7 @@ class skipMLP(nn.Module):
                 self.linears1.add_module("Linear{}".format(i + 1), nn.Linear(W, W))
                 self.linears1.add_module("relu{}".format(i + 1), nn.ReLU())
         self.initialize()
+
     def forward(self, x):
         h = self.linears1(x)
         if self.skips is not None:
@@ -226,18 +232,19 @@ class skipMLP(nn.Module):
     def initialize(self):
         for m in self.modules():
             if isinstance(m, nn.Linear):
-        # nn.init.normal_(m.weight.data, std=np.sqrt(1/self.neural_num))    # normal: mean=0, std=1
+                # nn.init.normal_(m.weight.data, std=np.sqrt(1/self.neural_num))    # normal: mean=0, std=1
 
-        # a = np.sqrt(6 / (self.neural_num + self.neural_num))
-        #
-        # tanh_gain = nn.init.calculate_gain('tanh')
-        # a *= tanh_gain
-        #
-        # nn.init.uniform_(m.weight.data, -a, a)
-        #         gainv
+                # a = np.sqrt(6 / (self.neural_num + self.neural_num))
+                #
+                # tanh_gain = nn.init.calculate_gain('tanh')
+                # a *= tanh_gain
+                #
+                # nn.init.uniform_(m.weight.data, -a, a)
+                #         gainv
                 nn.init.xavier_uniform_(m.weight.data, gain=nn.init.calculate_gain('relu'))
 
         # nn.init.normal_(m.weight.data, std=np.sqrt(2 / self.neural_num))
+
 
 def BilinearSampling(uvMap, coordinate, width=4095):
     def distance(x, y, codn_x, codn_y):

@@ -1,12 +1,14 @@
-import imageio
-
-import time
 import os
 import sys
+import time
+
+import imageio
+
 sys.path.append("../..")
-from run_nerf_helpers import *
+from tools.run_nerf_helpers import *
 from models.texEncoderModule import EnDeUVmap  # network_query_net
 from models.model import StyleModule
+
 
 class lossesLog:
     def __init__(self, lossesList, Weight):
@@ -19,10 +21,12 @@ class lossesLog:
             self.lossesDict[name] = 0
             self.chunkDict[name] = 0
             self.lossesWeight[name] = Weight[i]
+
     def update(self, lossesList, chunk):
         for name, value in lossesList.items():
             self.lossesDict[name] += torch.sum(value)
             self.chunkDict[name] += chunk
+
     def out(self):
         loss = 0
         for name, value in self.lossesDict.items():
@@ -32,8 +36,10 @@ class lossesLog:
             self.chunkDict[name] = 0
         return loss
 
+
 class myRenderer(torch.nn.Module):
-    def __init__(self, embed_fn=None, embeddirs_fn=None, netchunk=1024 * 64, uvCodesLen=256, expCodesLen=4, input_ch=3, shapeCodes=50):
+    def __init__(self, embed_fn=None, embeddirs_fn=None, netchunk=1024 * 64, uvCodesLen=256, expCodesLen=4, input_ch=3,
+                 shapeCodes=50):
         super(myRenderer, self).__init__()
         self.embed_fn = embed_fn
         self.embeddirs_fn = embeddirs_fn
@@ -66,13 +72,13 @@ class myRenderer(torch.nn.Module):
         inputs_flat = torch.reshape(inputs, [-1, inputs.shape[-1]])
 
         shapeCodes = self.shapeCodes[0, :].expand([inputs_flat.shape[0], self.shapeCodes.shape[-1]])
-        exp_scale, exp_bias = self.idSpecificMod(self.shapeCodes[0, :].reshape(1,-1))
+        exp_scale, exp_bias = self.idSpecificMod(self.shapeCodes[0, :].reshape(1, -1))
         embedded = inputs_flat
         embedded = self.embed_fn(embedded)
 
         if self.expCodes_Sigma is not None:
             in_ExpCodes_Sigma = self.expCodes_Sigma[self.expType]
-            in_ExpCodes_Sigma = exp_scale*in_ExpCodes_Sigma + exp_bias
+            in_ExpCodes_Sigma = exp_scale * in_ExpCodes_Sigma + exp_bias
             in_ExpCodes_Sigma = in_ExpCodes_Sigma.expand([inputs_flat.shape[0], -1])
         embedded = torch.cat([embedded.cuda(), in_ExpCodes_Sigma.cuda()], -1)  # new! exp15!
         embedded = [embedded]
@@ -92,13 +98,15 @@ class myRenderer(torch.nn.Module):
         """
         if chunk is None:
             return fn
+
         def ret(inputs):
             v1, v2, v3 = inputs
             t = self.decoding_texCodes.expand(v1.shape[0], -1)
-            #TODO  decoding_texCodes expand for multi-cards training
-            out=torch.cat([fn(v1[i:i + chunk], v2[i:i + chunk], v3[i:i + chunk], t[i:i + chunk]) for i in
-                              range(0, v1.shape[0], chunk)], 0)
+            # TODO  decoding_texCodes expand for multi-cards training
+            out = torch.cat([fn(v1[i:i + chunk], v2[i:i + chunk], v3[i:i + chunk], t[i:i + chunk]) for i in
+                             range(0, v1.shape[0], chunk)], 0)
             return out
+
         return ret
 
     def batchify_rays(self, chunk=1024 * 32, **kwargs):
@@ -174,7 +182,7 @@ class myRenderer(torch.nn.Module):
         self.rays = rays
         self.uvMap = uvMap
         self.expType = expType
-        self.decoding_texCodes, enlosses = self.texEncoder(     #texture map -> texture code
+        self.decoding_texCodes, enlosses = self.texEncoder(  # texture map -> texture code
             uvMap.permute([2, 0, 1]).unsqueeze(0), self.lossList)
         self.lossLog.update(enlosses, 1)
         all_ret = self.batchify_rays(chunk, **kwargs)
@@ -189,7 +197,8 @@ class myRenderer(torch.nn.Module):
             ret_dict['losses'] = self.lossLog.out()
         return ret_list + [ret_dict]
 
-    def render_path(self, render_poses, hwf, K, chunk, render_kwargs, uvMap=None, expType=None, gt_imgs=None, savedir=None,
+    def render_path(self, render_poses, hwf, K, chunk, render_kwargs, uvMap=None, expType=None, gt_imgs=None,
+                    savedir=None,
                     render_factor=0, shapeCodes=None, name=None):
         H, W, focal = hwf
         if render_factor != 0:
@@ -201,16 +210,17 @@ class myRenderer(torch.nn.Module):
         disps = []
 
         t = time.time()
-        if savedir is not None:  #for render final
+        if savedir is not None:  # for render final
             filename = os.path.join(savedir, '{}.png'.format(name))
             if os.path.exists(filename):
                 print("exists")
-                return 0,0
+                return 0, 0
 
         for i, c2w in enumerate(render_poses):
             print(i, time.time() - t)
             t = time.time()
-            rgb, disp, acc, _ = self.render(H, W, K, chunk=chunk, c2w=c2w[:3, :4], shapeCodes=shapeCodes[i, :].reshape(1, -1),
+            rgb, disp, acc, _ = self.render(H, W, K, chunk=chunk, c2w=c2w[:3, :4],
+                                            shapeCodes=shapeCodes[i, :].reshape(1, -1),
                                             uvMap=uvMap[i, :], expType=expType[i], **render_kwargs)
             rgbs.append(rgb.cpu().numpy())
             disps.append(disp.cpu().numpy())
@@ -318,7 +328,7 @@ class myRenderer(torch.nn.Module):
 
             z_vals, _ = torch.sort(torch.cat([z_vals.cuda(), z_samples.cuda()], -1), -1)
             pts = rays_o[..., None, :].cuda() + rays_d[..., None, :].cuda() * z_vals[..., :,
-                                                                None].cuda() # [N_rays, N_samples + N_importance, 3]
+                                                                              None].cuda()  # [N_rays, N_samples + N_importance, 3]
 
             run_fn = network_fn if network_fine is None else network_fine
             raw = self.run_network(
@@ -329,7 +339,7 @@ class myRenderer(torch.nn.Module):
         ret = {'rgb_map': rgb_map, 'disp_map': disp_map, 'acc_map': acc_map}
         if retraw:
             ret['raw'] = raw
-        if N_importance > 0 and self.is_run_fineNet==True:
+        if N_importance > 0 and self.is_run_fineNet == True:
             ret['rgb0'] = rgb_map_0
             ret['disp0'] = disp_map_0
             ret['acc0'] = acc_map_0
@@ -341,7 +351,9 @@ class myRenderer(torch.nn.Module):
                 print(f"! [Numerical Error] {k} contains nan or inf.")
 
         return ret
-    def render_fitting(self, H, W, K, chunk=1024 * 32, rays=None, c2w=None, ndc=True, shapeCodes=None, uvCodes=None, expType=20, expCodes=None,
+
+    def render_fitting(self, H, W, K, chunk=1024 * 32, rays=None, c2w=None, ndc=True, shapeCodes=None, uvCodes=None,
+                       expType=20, expCodes=None,
                        near=0., far=1.,
                        use_viewdirs=False, c2w_staticcam=None, network_query_fn=None,
                        **kwargs):
@@ -405,8 +417,11 @@ class myRenderer(torch.nn.Module):
 
         self.shapeCodes = shapeCodes
         self.rays = rays
-        self.expType = expType #exp add for fitting (default 20)
-        self.expCodes_Sigma.append(expCodes)  #exp add for fitting, requires for grad
+        self.expType = expType  # exp add for fitting (default 20)
+        if self.expCodes_Sigma.__len__() == 20:
+            self.expCodes_Sigma.append(expCodes)  # exp add for fitting, requires for grad
+        else:
+            self.expCodes_Sigma[20] = expCodes
         self.decoding_texCodes = uvCodes
         # Render and reshape  :: input all rays ,output rays results
 
@@ -421,6 +436,8 @@ class myRenderer(torch.nn.Module):
         if self.lossList is not None:
             ret_dict['losses'] = self.lossLog.out()
         return ret_list + [ret_dict]
+
+
 def raw2outputs(raw, z_vals, rays_d, raw_noise_std=0, white_bkgd=False, pytest=False):
     """Transforms model's predictions to semantically meaningful values.
     Args:
@@ -436,7 +453,8 @@ def raw2outputs(raw, z_vals, rays_d, raw_noise_std=0, white_bkgd=False, pytest=F
     """
     raw2alpha = lambda raw, dists, act_fn=F.relu: 1. - torch.exp(-act_fn(raw.cuda()) * dists.cuda())
     dists = z_vals[..., 1:] - z_vals[..., :-1]
-    dists = torch.cat([dists.cuda(), torch.Tensor([1e10]).cuda().expand(dists[..., :1].shape)], -1)  # [N_rays, N_samples]
+    dists = torch.cat([dists.cuda(), torch.Tensor([1e10]).cuda().expand(dists[..., :1].shape)],
+                      -1)  # [N_rays, N_samples]
 
     dists = dists * torch.norm(rays_d[..., None, :].cuda(), dim=-1)
 
@@ -451,7 +469,8 @@ def raw2outputs(raw, z_vals, rays_d, raw_noise_std=0, white_bkgd=False, pytest=F
             noise = torch.Tensor(noise)
 
     alpha = raw2alpha(raw[..., 3] + noise, dists)  # [N_rays, N_samples]
-    weights = alpha * torch.cumprod(torch.cat([torch.ones((alpha.shape[0], 1)).cuda(), 1. - alpha + 1e-10], -1), -1)[:, :-1]
+    weights = alpha * torch.cumprod(torch.cat([torch.ones((alpha.shape[0], 1)).cuda(), 1. - alpha + 1e-10], -1), -1)[:,
+                      :-1]
     rgb_map = torch.sum(weights[..., None] * rgb, -2)  # [N_rays, 3]
 
     depth_map = torch.sum(weights * z_vals.cuda(), -1)
@@ -462,4 +481,3 @@ def raw2outputs(raw, z_vals, rays_d, raw_noise_std=0, white_bkgd=False, pytest=F
         rgb_map = rgb_map + (1. - acc_map[..., None])
 
     return rgb_map, disp_map, acc_map, weights, depth_map
-
