@@ -3,64 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="384159fd-db8d-4a43-a4f4-bda4c4f6f50e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config_parser.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/create_model_condition.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fittingDataPreprocess/AlignmentCode/1_975_landmarks.npy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fittingDataPreprocess/AlignmentCode/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fittingDataPreprocess/AlignmentCode/shape_predictor_68_face_landmarks.dat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fittingDataPreprocess/AlignmentCode/wild_fit_base.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fittingDataPreprocess/RelightingModule.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fittingDataPreprocess/SegmentCode/get_pair_parsing.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fittingDataPreprocess/SegmentCode/get_pair_parsing2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fittingDataPreprocess/SegmentCode/model.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fittingDataPreprocess/SegmentCode/process_data_asian.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fittingDataPreprocess/SegmentCode/resnet.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fittingDataPreprocess/fcspLight.npy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fittingDataPreprocess/model/defineHourglass_1024_gray_skip_matchFeature.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fittingDataPreprocess/model/defineHourglass_512_gray_skip.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fittingDataPreprocess/trained_model/trained_model_03.t7" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fittingDataPreprocess/trained_model/trained_model_1024_03.t7" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fittingDataPreprocess/utils/utils_SH.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fittingDataPreprocess/utils/utils_normal.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fittingDataPreprocess/utils/utils_shtools.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fittingDataPreprocess/wildData_preprocess.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/load_facescape.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logger.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/_config.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/data/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/data/base_data_loader.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/data/base_dataset.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/data/custom_dataset_data_loader.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/data/data_loader.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/data/facescape_dataset.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/data/image_folder.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/encode_features.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/models/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/models/base_model.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/models/models.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/models/networks.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/models/pix2pixHD_model.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/models/ui_model.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/options/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/options/base_options.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/options/test_options.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/options/train_options.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/test.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/train.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/util/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/util/html.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/util/image_pool.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/util/util.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/refinementModule/util/visualizer.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/run_nerf_helpers.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/trainingDataPreprocess/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/trainingDataPreprocess/align_clip.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/trainingDataPreprocess/predef/Rt_scale_dict.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/trainingDataPreprocess/predef/maxDistance.npy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/trainingDataPreprocess/predef/order_new_old.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/trainingDataPreprocess/render.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/wild_fit_base.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +40,7 @@
       <option name="presentableId" value="Default" />
       <updated>1642492172808</updated>
       <workItem from="1642492177692" duration="7630000" />
-      <workItem from="1642517961968" duration="2098000" />
+      <workItem from="1642517961968" duration="2107000" />
     </task>
     <servers />
   </component>

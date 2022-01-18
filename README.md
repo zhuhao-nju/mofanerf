@@ -77,7 +77,7 @@ The refined results will be saved in folder `refine`  in the same parent directo
 ```
 python run_refine.py --name facescape --nerf_folder ../data/fit/fitting/segRelRes_00133/render/
 ```
-- ###Face Rigging and Editing
+- ### Face Rigging and Editing
 #### 1. Render modulation results
 This demo simply show how to rig and edit the fitting results.
 ```

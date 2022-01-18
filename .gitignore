@@ -1,3 +1,4 @@
 *.pth
 *.tar
 __pycache__
+.idea
