@@ -42,8 +42,7 @@ pip install -r requirements.txt
 * **Pre-trained models**
 
 You can download our models from this [link](https://box.nju.edu.cn/f/10c4b145bfc648efb145/?dl=1).  
-After uncompressing, you should move the folder `/facescape/` into `./refinementModule/checkpoints`, 
-and the folder `/mofanerf_0to300/` into `./logs`.
+After uncompressing, you should move the folder `/refine/` and `/mofanerf_0to300/` into `./logs`.
 
 Test our model
 ------
