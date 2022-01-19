@@ -46,7 +46,7 @@ pip install -r requirements.txt
 
 * **Pre-trained models**
 
-You can download our models from this [link](https://box.nju.edu.cn/f/10c4b145bfc648efb145/?dl=1).  
+You can download our models from this [link-pretrained_model](https://box.nju.edu.cn/f/10c4b145bfc648efb145/).  
 After uncompressing, you should move the folder `/refine/` and `/mofanerf_0to300/` into `./logs`.
 
 Test our model
