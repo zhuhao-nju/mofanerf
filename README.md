@@ -27,14 +27,13 @@ Catalog
 Install
 ------
 * **Environment configuration**
-The code was tested on Python 3.7. Install the required packages:
 ```
-pip install -r requirements.txt
+pip install -r requirements.txt # tested on Python 3.7
 ```
 <box style="text-indent:1.0em; font-size: 13px">
 <details>
   <summary> Dependencies (click to expand) </summary>
-  
+ 
   - PyTorch 1.9.0
   - dlib 19.22.1
   - matplotlib
@@ -49,12 +48,8 @@ pip install -r requirements.txt
 
 Download the pretrained models:
 ```
-wget --no-check-certificate 'https://box.nju.edu.cn/f/10c4b145bfc648efb145/?dl=1' -O ./samples.tar.gz 
-unzip 
+./download_pretrained_models.sh 
 ```
-
-running from this [link-pretrained_model](https://box.nju.edu.cn/f/10c4b145bfc648efb145/).  
-After uncompressing, you should move the folder `/refine/` and `/mofanerf_0to300/` into `./logs`.
 
 Test our model
 ------
