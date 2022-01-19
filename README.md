@@ -1,5 +1,9 @@
 # MoFaNeRF:Morphable Facial Neural Radiance Field
 ### [Project Page](https://neverstopzyy.github.io/mofanerf/) | [Video](https://neverstopzyy.github.io/mofanerf/video/supplement_video_7_audio_1.mp4) | [Paper](https://arxiv.org/abs/2112.02308)  
+[![report](https://img.shields.io/badge/project_page-OK-green)](https://neverstopzyy.github.io/mofanerf/)
+[![report](https://img.shields.io/badge/arXiv_report-OK-green)](https://arxiv.org/abs/2112.02308) 
+[![report](https://img.shields.io/badge/testing_code-OK-green)](https://github.com/zhuhao-nju/mofanerf)
+[![report](https://img.shields.io/badge/training_code-preparing-yellow)](https://github.com/zhuhao-nju/mofanerf)
 
 [comment]: <> (| [Data]&#40;https://zjueducn-my.sharepoint.com/:f:/g/personal/pengsida_zju_edu_cn/Eo9zn4x_xcZKmYHZNjzel7gBdWf_d4m-pISHhPWB-GZBYw?e=Hf4mz7&#41;)
 
