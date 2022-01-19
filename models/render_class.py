@@ -6,7 +6,7 @@ import imageio
 
 sys.path.append("../..")
 from tools.run_nerf_helpers import *
-from models.texEncoderModule import EnDeUVmap  # network_query_net
+from models.tex_encoder_mod import EnDeUVmap  # network_query_net
 from models.model import StyleModule
 
 
