@@ -71,7 +71,7 @@ def main():
         # from fit_data_pre.AlignmentCode.wild_fit_base import mfnerf_fitting
         from fit_data_pre.AlignmentCode.wild_fit_base import mfnerf_fitting
         import cv2
-        mf_fitter = mfnerf_fitting(lm_file="./fit_data_pre/AlignmentCode/shape_predictor_68_face_landmarks.dat")
+        mf_fitter = mfnerf_fitting(lm_file="./tools/fit_data_pre/AlignmentCode/shape_predictor_68_face_landmarks.dat")
         os.makedirs(rawDataDir, exist_ok=True)
         for i, filename in enumerate(raw_fileList):
             img = cv2.imread(basedir + filename)

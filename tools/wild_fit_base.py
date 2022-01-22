@@ -168,7 +168,7 @@ class pose_estimate():
     def __init__(self):
         # self.tmpLM = glob_neutral_tmp_LM
         print(os.listdir("./"))
-        landmark = np.load("../data/1_975_landmarks.npy")
+        landmark = np.load("./data/1_975_landmarks.npy")
         self.tmpLM = landmark[1, 0, :, :] / 50.
 
     def fit_kp2d(self, kp2d):
@@ -462,14 +462,14 @@ def merge_add_mask(img_1, mask):
 #         # plt.show()
 #         return crop_result
 if __name__ == "__main__":
-    mf_fitter = mfnerf_fitting(lm_file="../data/shape_predictor_68_face_landmarks.dat")
+    mf_fitter = mfnerf_fitting(lm_file="./data/shape_predictor_68_face_landmarks.dat")
     # src_img = cv2.imread("../data/wild_face_celeba/chan.jpg")
     # src_img = cv2.imread("../data/wild_face_celeba/p4.JPG")
     # kp2d, scale_img = mf_fitter.detect_kp2d(src_img,is_show_img=True) # extract 2D key points
     # mf_fitter.crop_face(scale_img, kp2d)
     # mf_fitter.visual_kp(kp2d,src_img)
 
-    nerf_img = cv2.imread("../data/multiViewDataForNerf300/1/neutral/-30_15.png")
+    nerf_img = cv2.imread("./data/multiViewDataForNerf300/1/neutral/-30_15.png")
     kp2d, scale_img = mf_fitter.detect_kp2d(nerf_img, is_show_img=True)
 
     PE = pose_estimate()

@@ -12,7 +12,7 @@ import torchvision.transforms as transforms
 from PIL import Image
 # import matplotlib.pyplot as plt
 import sys
-sys.path.append("./fit_data_pre/")
+sys.path.append("./tools/fit_data_pre/")
 from utils import *
 from model import BiSeNet
 from SegmentCode.process_data_asian import draw_landmark_contour, get_landmark_from_img
@@ -143,7 +143,7 @@ def evaluate(respth='', dspth='', img_list=None, cp='Seg_79999_iter.pth'):
     n_classes = 19
     net = BiSeNet(n_classes=n_classes)
     net.cuda()
-    save_pth = osp.join('./fit_data_pre/trained_model/', cp)
+    save_pth = osp.join('./tools/fit_data_pre/trained_model/', cp)
     net.load_state_dict(torch.load(save_pth))
     net.eval()
 
