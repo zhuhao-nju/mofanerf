@@ -81,25 +81,17 @@ This demo show how to use our refinement module to enrich details of the rendere
 
 The refined results will be saved in folder `refine`  in the same parent directory as the target folder.
 ```
-<<<<<<< HEAD
-python run_refine.py --name facescape --nerf_folder ../data/fit/fitting/segRelRes_1/render/
-=======
-python run_refine.py --name facescape --nerf_folder ./data/fit/fitting/segRelRes_00133/render/
->>>>>>> b2d848a4d93715097de3cbcaf8e967c0b0bee072
+python run_refine.py --name facescape --nerf_folder ./data/fit/fitting/segRelRes_1/render/
 ```
 - ### Face Rigging and Editing
 #### 1. Render modulation results
-This demo simply show how to rig and edit the fitting results.  
+This demo simply show how to rig and edit the fitting results.
 ```
 python run_fit.py --filePath ./data/fit/segRelRes/1.png --renderType rendering_modulation
 ```
 #### 2. Refine the rendered results
 ```
-<<<<<<< HEAD
 python run_refine.py --name facescape --nerf_folder ../data/fit/fitting/segRelRes_1/render/
-=======
-python run_refine.py --name facescape --nerf_folder ./data/fit/fitting/segRelRes_00133/render/
->>>>>>> b2d848a4d93715097de3cbcaf8e967c0b0bee072
 ```
 
 
