@@ -102,7 +102,6 @@ class myRenderer(torch.nn.Module):
         def ret(inputs):
             v1, v2, v3 = inputs
             t = self.decoding_texCodes.expand(v1.shape[0], -1)
-            # TODO  decoding_texCodes expand for multi-cards training
             out = torch.cat([fn(v1[i:i + chunk], v2[i:i + chunk], v3[i:i + chunk], t[i:i + chunk]) for i in
                              range(0, v1.shape[0], chunk)], 0)
             return out

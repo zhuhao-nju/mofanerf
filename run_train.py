@@ -294,7 +294,7 @@ def train():
             img_i = np.random.choice(i_train)  ##
             target_uvmap = readImgFromPath(uv_images["{}".format(idcodes[img_i])], half_res=False, is_uvMap=True).to(
                 device)
-            target_expType = expTypes[img_i]  # TODO： new exp11
+            target_expType = expTypes[img_i]
             target = images[img_i]
             target = readImgFromPath(target, half_res=args.half_res)
             target = torch.Tensor(target).to(device)

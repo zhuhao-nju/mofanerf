@@ -66,7 +66,6 @@ class LMModule:
                 tmNum = numOfPoint // lenOfPoint + 1
                 sampleLandMark = sampleLandMark.repeat(tmNum, 0)
                 res_sampleLandMark = sampleLandMark[:numOfPoint, :]
-                # res_sampleLandMark[lenOfPoint:, :] = sampleLandMark[:numOfPoint-lenOfPoint,:]
                 sampleLandMark = res_sampleLandMark
             else:
                 res_sampleLandMark = sampleLandMark[np.random.choice(np.arange(lenOfPoint), numOfPoint), :]
@@ -227,11 +226,9 @@ def train(src_path=None, renderType=None, num_iterations=2000, is_load_par=False
     # path initial
     ttype = src_path.split("/")[-2]
     tfileName = src_path.split("/")[-1]
-    testsavedir = src_path[:-len(tfileName) - len(ttype) - 2]  # + "/{}_{}".format(ttype, tfileName)
+    testsavedir = src_path[:-len(tfileName) - len(ttype) - 2]
     os.makedirs(testsavedir, exist_ok=True)
     name = None
-    # tttestsavedir = os.path.join(testsavedir, "fitres")
-    # os.makedirs(tttestsavedir, exist_ok=True)
     testsavedir = os.path.join(testsavedir, "fitting/{}_{}".format(typeName, src_img_name))
 
     os.makedirs(testsavedir, exist_ok=True)
@@ -343,11 +340,6 @@ def train(src_path=None, renderType=None, num_iterations=2000, is_load_par=False
                         H_render = H
                         W_render = W
                         K_render = K
-                    # if e == begin_iter + num_iterations:
-                    #     # testsavedir = tttestsavedir
-                    #     H_render = int(H_raw)
-                    #     W_render = int(W_raw)
-                    #     K_render = K_raw
                     rgb, disp, acc, _ = render.render_fitting(H_render, W_render, K_render, chunk=args.chunk // 2,
                                                               c2w=render_poses[:3, :4],
                                                               shapeCodes=render_bm, uvCodes=render_uv,
@@ -383,6 +375,7 @@ def train(src_path=None, renderType=None, num_iterations=2000, is_load_par=False
 
             imageio.imwrite(filename, rgb8)
             print("rendering: ", filename)
+
     elif renderType == "rendering_modulation":
         print("rendering modulation~!")
         H = H_raw
@@ -397,10 +390,9 @@ def train(src_path=None, renderType=None, num_iterations=2000, is_load_par=False
             K = K_raw / scale_now
         testsavedir = os.path.join(testsavedir, "render")
         os.makedirs(testsavedir, exist_ok=True)
-
+        # Face Rigging
         for expType in [9,14,2,16,17]:  #number in [0-20)
             with torch.no_grad():
-                continue
                 c_render_expCodes = render.expCodes_Sigma[expType]
                 rgb, disp, acc, _ = render.render_fitting(H, W, K, chunk=args.chunk, c2w=target_pose[:3, :4],
                                                           shapeCodes=render_bm, uvCodes=render_uv, expType=20,
@@ -410,8 +402,11 @@ def train(src_path=None, renderType=None, num_iterations=2000, is_load_par=False
             filename = os.path.join(testsavedir, 'rigging_{}.png'.format(expressionName[expType]))
             imageio.imwrite(filename, rgb8)
             print("rendering: ", filename)
+        par = np.load("./predef_par.npy", allow_pickle=True).item()
+        # Face Editing -- change shape
         for i in range(3):
-            c_render_bm = myrandomSp.getRand(device=device)
+            # c_render_bm = myrandomSp.getRand(device=device)  #Random Genaration
+            c_render_bm = par['shape'][i][None, ...].to(device)
             with torch.no_grad():
                 rgb, disp, acc, _ = render.render_fitting(H, W, K, chunk=args.chunk, c2w=target_pose[:3, :4],
                                                           shapeCodes=c_render_bm, uvCodes=render_uv, expType=20,
@@ -421,8 +416,10 @@ def train(src_path=None, renderType=None, num_iterations=2000, is_load_par=False
             filename = os.path.join(testsavedir, 'chg_shape_{}.png'.format(i))
             imageio.imwrite(filename, rgb8)
             print("rendering: ", filename)
+        # Face Editing -- change texture
         for i in range(3):
-            c_render_tex = myrandomTex.getRand(device)
+            # c_render_tex = myrandomTex.getRand(device)  #Random Genaration
+            c_render_tex = par['texture'][i].to(device)
             with torch.no_grad():
                 rgb, disp, acc, _ = render.render_fitting(H, W, K, chunk=args.chunk, c2w=target_pose[:3, :4],
                                                           shapeCodes=render_bm, uvCodes=c_render_tex, expType=20,
@@ -439,17 +436,13 @@ def train(src_path=None, renderType=None, num_iterations=2000, is_load_par=False
 
 if __name__ == '__main__':
     torch.set_default_tensor_type('torch.cuda.FloatTensor')
-    # import argparse
-    # parser = argparse.ArgumentParser()
-    #
-    # args = parser.parse_args()
     parser = config_parser()
     parser.add_argument("--filePath", type=str, default=None, help="file path of the image to be fitted", required=True)
     parser.add_argument("--renderType", type=str, default="fitting",
-                        help="\"rendering\" or \"fitting\": if \"rendering\", we load the fitted parameters and render rgb image from three views; "
-                             "if \"fitting\", we optimize our codes to fit the image.")
-    parser.add_argument("--is_load_par", type=bool, default=None, help="if load the fitted result")
-    parser.add_argument("--num_iterations", type=int, default=2000, help="if load the fitted result")
+                        help="\"rendering\" or \"fitting\": if \"rendering\", we load the fitted parameters and render rgb images from three views; "
+                             "if \"fitting\", we optimize our codes to fit to the image.")
+    parser.add_argument("--is_load_par", type=bool, default=None, help="if load the fitted results")
+    parser.add_argument("--num_iterations", type=int, default=2000, help="if load the fitted results")
     args = parser.parse_args()
     train(src_path=args.filePath, renderType=args.renderType, num_iterations=args.num_iterations,
           is_load_par=args.is_load_par, args=args)

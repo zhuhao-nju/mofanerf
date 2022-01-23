@@ -69,30 +69,30 @@ This demo show the way to batch processing of the wild images.
 #### 2. Fit to the processed image
 This demo show how to fit our model to target image.
 ```
-python run_fit.py --filePath ./data/fit/segRelRes/00133.png
+python run_fit.py --filePath ./data/fit/segRelRes/1.png
 ```
-* Reminder: If your GPU has memory of only 10GB, we recommend that you modify parameters "netchunk","chunk" to 16384, "N_rand" to 64 in `./configs/exp_mofanerf.txt`.
+* Reminder: If your GPU has memory of only 10GB, we recommend that you modify parameters "netchunk","chunk" from 196608 to 16384, "N_rand" from 1024 to 64 in `./configs/exp_mofanerf.txt`.
 #### 3. Render images of novel views
 This demo show how to render novel views with the fitted parameters, and just simply add one parameter "--renderType rendering".
 ```
-python run_fit.py --filePath ./data/fit/segRelRes/00133.png --renderType rendering  
+python run_fit.py --filePath ./data/fit/segRelRes/1.png --renderType rendering  
 ```
 #### 4. Refine the rendered results
 This demo show how to use our refinement module to enrich details of the rendered results.
 
 The refined results will be saved in folder `refine`  in the same parent directory as the target folder.
 ```
-python run_refine.py --name facescape --nerf_folder ../data/fit/fitting/segRelRes_00133/render/
+python run_refine.py --name facescape --nerf_folder ../data/fit/fitting/segRelRes_1/render/
 ```
 - ### Face Rigging and Editing
 #### 1. Render modulation results
-This demo simply show how to rig and edit the fitting results.
+This demo simply show how to rig and edit the fitting results.  
 ```
-python run_fit.py --filePath ./data/fit/segRelRes/00133.png --renderType rendering_modulation
+python run_fit.py --filePath ./data/fit/segRelRes/1.png --renderType rendering_modulation
 ```
 #### 2. Refine the rendered results
 ```
-python run_refine.py --name facescape --nerf_folder ../data/fit/fitting/segRelRes_00133/render/
+python run_refine.py --name facescape --nerf_folder ../data/fit/fitting/segRelRes_1/render/
 ```
 
 
