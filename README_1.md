@@ -2,7 +2,7 @@
 
 [comment]: <> (### [Project Page]&#40;https://neverstopzyy.github.io/mofanerf/&#41; | [Video]&#40;https://neverstopzyy.github.io/mofanerf/video/supplement_video_7_audio_1.mp4&#41; | [Paper]&#40;https://arxiv.org/abs/2112.02308&#41;  )
 [![report](https://img.shields.io/badge/project_page-OK-green)](https://neverstopzyy.github.io/mofanerf/)
-[![report](https://img.shields.io/badge/arXiv_report-OK-green)](https://arxiv.org/abs/2112.02308) 
+[![report](https://img.shields.io/badge/arXiv_report-OK-green)](https://arxiv.org/abs/2112.02308)
 [![report](https://img.shields.io/badge/testing_code-OK-green)](https://github.com/zhuhao-nju/mofanerf)
 [![report](https://img.shields.io/badge/training_code-preparing-yellow)](https://github.com/zhuhao-nju/mofanerf)
 
@@ -33,7 +33,7 @@ pip install -r requirements.txt # tested on Python 3.7
 <box style="text-indent:1.0em; font-size: 13px">
 <details>
   <summary> Dependencies (click to expand) </summary>
- 
+
   - PyTorch 1.9.0
   - dlib 19.22.1
   - matplotlib
@@ -48,7 +48,7 @@ pip install -r requirements.txt # tested on Python 3.7
 
 Download the pretrained models:
 ```
-./download_pretrained_models.sh 
+./download_pretrained_models.sh
 ```
 
 Test our model
@@ -57,14 +57,13 @@ Test our model
 <img src="https://neverstopzyy.github.io/mofanerf/images/fig_gen_fit.png" width=1024>
 
 #### 1. Prepare your data first
-We preprocess wild images using the following three steps: alignment, segmentation and relighting, 
-and we pack these steps into `wildData_preprocess.py`. After the preprocessing, 
+We preprocess wild images using the following three steps: alignment, segmentation and relighting,
+and we pack these steps into `wildData_preprocess.py`. After the preprocessing,
 one aligned image and one estimated camera pose you will get.
 
 This demo show the way to batch processing of the wild images.
 ```
- cd tools
- python wildData_preprocess.py --filePath ../data/fit/
+ python ./tools/wildData_preprocess.py --filePath ./data/fit/
 ```
 #### 2. Fit to the processed image
 This demo show how to fit our model to target image.
@@ -82,7 +81,11 @@ This demo show how to use our refinement module to enrich details of the rendere
 
 The refined results will be saved in folder `refine`  in the same parent directory as the target folder.
 ```
+<<<<<<< HEAD
 python run_refine.py --name facescape --nerf_folder ../data/fit/fitting/segRelRes_1/render/
+=======
+python run_refine.py --name facescape --nerf_folder ./data/fit/fitting/segRelRes_00133/render/
+>>>>>>> b2d848a4d93715097de3cbcaf8e967c0b0bee072
 ```
 - ### Face Rigging and Editing
 #### 1. Render modulation results
@@ -92,7 +95,11 @@ python run_fit.py --filePath ./data/fit/segRelRes/1.png --renderType rendering_m
 ```
 #### 2. Refine the rendered results
 ```
+<<<<<<< HEAD
 python run_refine.py --name facescape --nerf_folder ../data/fit/fitting/segRelRes_1/render/
+=======
+python run_refine.py --name facescape --nerf_folder ./data/fit/fitting/segRelRes_00133/render/
+>>>>>>> b2d848a4d93715097de3cbcaf8e967c0b0bee072
 ```
 
 

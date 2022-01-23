@@ -1,7 +1,7 @@
 import sys
 
-sys.path.append('./fit_data_pre/models')
-sys.path.append('./fit_data_pre/utils')
+sys.path.append('./tools/fit_data_pre/models')
+sys.path.append('./tools/fit_data_pre/utils')
 
 from utils_SH import *
 
@@ -13,7 +13,7 @@ from torch.autograd import Variable
 import torch
 import cv2
 
-modelFolder = './fit_data_pre/trained_model/'
+modelFolder = './tools/fit_data_pre/trained_model/'
 
 # load model
 from defineHourglass_512_gray_skip import *
@@ -26,7 +26,7 @@ class RelightModule():
         my_network.cuda()
         my_network.train(False)
         self.RelMo = my_network
-        self.srcSH = np.load("./fit_data_pre/trained_model/fcspLight.npy")
+        self.srcSH = np.load("./tools/fit_data_pre/trained_model/fcspLight.npy")
         # self.device = device
 
     def trans_get_sh(self, RGB):  # returen sh of src_img, and tar_sh trans result

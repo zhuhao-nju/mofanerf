@@ -120,7 +120,7 @@ class mfnerf_fitting:
 
 class pose_estimate():
     def __init__(self):
-        landmark = np.load("../data/1_975_landmarks.npy")
+        landmark = np.load("./data/1_975_landmarks.npy")
         self.tmpLM = landmark[1, 0, :, :] / 50.
 
     def fit_kp2d(self, kp2d):
