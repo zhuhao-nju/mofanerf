@@ -91,7 +91,7 @@ python run_fit.py --filePath ./data/fit/segRelRes/1.png --renderType rendering_m
 ```
 #### 2. Refine the rendered results
 ```
-python run_refine.py --name facescape --nerf_folder ../data/fit/fitting/segRelRes_1/render/
+python run_refine.py --name facescape --nerf_folder ./data/fit/fitting/segRelRes_1/render/
 ```
 
 
