@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Morphable Facial Neural Radiance Field (MoFaNeRF)
 
 [![report](https://img.shields.io/badge/project_page-OK-green)](https://neverstopzyy.github.io/mofanerf/)
