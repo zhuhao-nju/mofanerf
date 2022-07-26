@@ -1,12 +1,12 @@
 # MoFaNeRF:Morphable Facial Neural Radiance Field
 
-[comment]: <> (### [Project Page]&#40;https://neverstopzyy.github.io/mofanerf/&#41; | [Video]&#40;https://neverstopzyy.github.io/mofanerf/video/supplement_video_7_audio_1.mp4&#41; | [Paper]&#40;https://arxiv.org/abs/2112.02308&#41;  )
+[comment]: <> "### [Project Page]&#40;https://neverstopzyy.github.io/mofanerf/&#41; | [Video]&#40;https://neverstopzyy.github.io/mofanerf/video/supplement_video_7_audio_1.mp4&#41; | [Paper]&#40;https://arxiv.org/abs/2112.02308&#41;  "
 [![report](https://img.shields.io/badge/project_page-OK-green)](https://neverstopzyy.github.io/mofanerf/)
 [![report](https://img.shields.io/badge/arXiv_report-OK-green)](https://arxiv.org/abs/2112.02308)
 [![report](https://img.shields.io/badge/testing_code-OK-green)](https://github.com/zhuhao-nju/mofanerf)
-[![report](https://img.shields.io/badge/training_code-preparing-yellow)](https://github.com/zhuhao-nju/mofanerf)
+[![report](https://img.shields.io/badge/training_code-ok-green)](https://github.com/zhuhao-nju/mofanerf)
 
-[comment]: <> (| [Data]&#40;https://zjueducn-my.sharepoint.com/:f:/g/personal/pengsida_zju_edu_cn/Eo9zn4x_xcZKmYHZNjzel7gBdWf_d4m-pISHhPWB-GZBYw?e=Hf4mz7&#41;)
+[comment]: <> "| [Data]&#40;https://zjueducn-my.sharepoint.com/:f:/g/personal/pengsida_zju_edu_cn/Eo9zn4x_xcZKmYHZNjzel7gBdWf_d4m-pISHhPWB-GZBYw?e=Hf4mz7&#41;"
 
 <img src="https://i.imgur.com/PNRhZAN.png" width="1024">
 
@@ -22,7 +22,7 @@ Catalog
     + [2. Fit to the processed image](#2-fit-to-the-processed-image)
     + [3. Render images of novel views](#3-render-images-of-novel-views)
     + [4. Refine the rendered results](#4-refine-the-rendered-results)
-* [Train your own model(coming soon)]()
+* [Train your own model]()
 
 Install
 ------
@@ -90,14 +90,38 @@ This demo simply show how to rig and edit the fitting results.
 python run_fit.py --filePath ./data/fit/segRelRes/1.png --renderType rendering_modulation
 ```
 #### 2. Refine the rendered results
+
 ```
 python run_refine.py --name facescape --nerf_folder ./data/fit/fitting/segRelRes_1/render/
 ```
 
-
 Train your own model
 ------
-**coming soon**
+
+#### 1. Train the coarse part of MoFaNeRF 
+
+```
+ python run_train.py --config ./configs/exp_mofanerf.txt
+ ```
+
+#### 2. There are three steps to train our refineNet:
+
+2.1. Render the training data with MoFaNeRF:
+
+```
+python render_refine_trainSet.py  --config ./configs/exp_mofanerf.txt
+```
+
+2.2. Prepare paired ground truth images of rendered results:
+
+Try to modify the folder paths in  *prepare_refineNet_trainSet.py* to achieve it.
+
+2.3. Run the training code for refineNet:
+```
+python run_train_refineNet.py --name facescape --dataroot *dataPath* --nerf_folder train --gt_folder GT
+```
+
+**Tips**: It takes a long time to run *render_refine_trainSet.py*, so you can try to distribute the task across several machines. A simple way to do this is to split the identity list with the parameters "begin_person" and "end_person", thus enabling multiple identities to be rendered at the same time.
 
 Bibtex
 ---
