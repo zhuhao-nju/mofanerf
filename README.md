@@ -128,7 +128,7 @@ Bibtex
 If you find this project helpful to your research, please consider citing:
 
 ```
-@InProceedings{zhuang2021mofanerf,
+@InProceedings{zhuang2022mofanerf,
   title={MoFaNeRF: Morphable Facial Neural Radiance Field},
   author={Zhuang, Yiyu and Zhu, Hao and Sun, Xusen and Cao, Xun},
   booktitle={European Conference on Computer Vision},
