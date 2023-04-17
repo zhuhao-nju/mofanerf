@@ -27,7 +27,7 @@ input_ch_textureCodes=256
 input_ch_expCodes=30  #
 
 lrate=5e-5  #5e-5
-i_testset=1
-i_weights=1
+i_testset=100000 
+i_weights=100000
 
 
